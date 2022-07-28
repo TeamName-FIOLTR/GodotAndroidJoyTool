@@ -1,0 +1,76 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://assets/circle_select.tres" type="Shader" id=1]
+[ext_resource path="res://scripts/JoyDisplay.gd" type="Script" id=2]
+[ext_resource path="res://scripts/androidJoyStick.gd" type="Script" id=3]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 1 )
+shader_param/radius_percentage = 0.416
+shader_param/radius_thickness = 0.069
+shader_param/color = Plane( 0, 0, 0, 1 )
+shader_param/focus_color = Plane( 1, 0, 0, 1 )
+shader_param/focus_angle = 0.0
+shader_param/focus_thickness = 0.5
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = ExtResource( 1 )
+shader_param/radius_percentage = 0.416
+shader_param/radius_thickness = 0.069
+shader_param/color = Plane( 0, 0, 0, 1 )
+shader_param/focus_color = Plane( 1, 1, 1, 0 )
+shader_param/focus_angle = 2.616
+shader_param/focus_thickness = 0.5
+
+[node name="androidJoyStick" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 3 )
+right_stick_node_path = NodePath("right_container/Control2/CenterContainer2/ColorRect")
+left_stick_node_path = NodePath("left_container/Control/CenterContainer/ColorRect")
+
+[node name="left_container" type="Control" parent="."]
+anchor_right = 0.5
+anchor_bottom = 1.0
+
+[node name="Control" type="Control" parent="left_container"]
+anchor_top = 0.75
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CenterContainer" type="CenterContainer" parent="left_container/Control"]
+anchor_right = 0.75
+anchor_bottom = 1.0
+
+[node name="ColorRect" type="ColorRect" parent="left_container/Control/CenterContainer"]
+material = SubResource( 1 )
+margin_left = 142.0
+margin_top = 25.0
+margin_right = 242.0
+margin_bottom = 125.0
+rect_min_size = Vector2( 100, 100 )
+script = ExtResource( 2 )
+
+[node name="right_container" type="Control" parent="."]
+anchor_left = 0.5
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Control2" type="Control" parent="right_container"]
+anchor_top = 0.75
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CenterContainer2" type="CenterContainer" parent="right_container/Control2"]
+anchor_left = 0.25
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="ColorRect" type="ColorRect" parent="right_container/Control2/CenterContainer2"]
+material = SubResource( 2 )
+margin_left = 142.0
+margin_top = 25.0
+margin_right = 242.0
+margin_bottom = 125.0
+rect_min_size = Vector2( 100, 100 )
+script = ExtResource( 2 )

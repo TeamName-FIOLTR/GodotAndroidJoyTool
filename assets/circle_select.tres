@@ -1,0 +1,65 @@
+[gd_resource type="Shader" format=2]
+
+[resource]
+code = "shader_type canvas_item;
+
+uniform float radius_percentage = 0.3;
+uniform float radius_thickness = 0.01;
+uniform vec4 color = vec4(0.0,0.0,0.0,1.0);
+uniform vec4 focus_color = vec4(1.0,0.0,0.0,1.0);
+uniform float focus_angle = 0.0;
+uniform float focus_thickness = 0.5;
+
+//mixes two float values quadratically based on a lever value
+//note that the parabala tends to speed up twoards end
+float qudratic_mixer(float start,float end,float lever) {
+	return (end-start)*lever*lever+start;
+}
+/*TODO: clean this*/
+float angle(float x,float y) {
+	float ret_val = abs(atan(-y/x));
+	
+	if (-y < 0.0 && x < 0.0) {
+		ret_val = 3.14159 + ret_val;
+	}
+	else if (x < 0.0) {
+		ret_val = 3.14159 - ret_val;
+	} 
+	else if (-y < 0.0) {
+		ret_val = 2.0*3.14159 - ret_val;
+	}
+	
+	return ret_val;
+}
+float perc_diff(float x,float y) {
+	return 2.0*abs(x-y)/(x+y);
+}
+//does fmod in the demos style :)
+float fmod_desmos(float var,float base) {
+	return var - base*floor(var/base);
+}
+void fragment() {
+	float dist = distance(vec2(0.5,0.5),UV);
+	float alpha = 0.0;
+	if (dist > radius_percentage - radius_thickness && dist < radius_percentage + radius_thickness) {
+		alpha = 1.0-(1.0/radius_thickness)*((abs(dist-radius_percentage)))/(dist+radius_percentage);
+		if (alpha < 0.0) {
+			alpha = 0.0;
+		}
+	}
+	
+	
+	float point_angle = angle(UV[0]-0.5,UV[1]-0.5);
+	float rotated_point_angle = fmod_desmos(point_angle + focus_thickness - focus_angle,2.0*3.14159);
+	COLOR.a = alpha;
+	COLOR.rgb = color.rgb;
+	
+	if ( rotated_point_angle < 2.0*focus_thickness) {
+	//if (point_angle < focus_thickness + focus_angle && point_angle > focus_angle - focus_thickness) {
+		//COLOR.a = 0.0;
+		float slider = abs(rotated_point_angle-focus_thickness)/focus_thickness;
+		COLOR.r = qudratic_mixer(focus_color.r,color.r,slider);
+		COLOR.g = qudratic_mixer(focus_color.g,color.g,slider);
+		COLOR.b = qudratic_mixer(focus_color.b,color.b,slider);
+	}
+}"
